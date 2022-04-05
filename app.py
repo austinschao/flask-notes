@@ -26,6 +26,10 @@ def redirect_to_register():
 def register():
     """ Register a user on form validate or display register form """
 
+    if 'username' in session:
+        username = session['username']
+        return redirect(f'/users/{username}')
+
     form = RegisterForm()
 
     if form.validate_on_submit():
@@ -39,7 +43,8 @@ def register():
 
         db.session.add(new_user)
         db.session.commit()
-
+        
+        session["username"] = user.username
         return redirect(f'/users/{username}')
 
     else:
@@ -48,6 +53,11 @@ def register():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     """ Logs in user if user found in db (authenticate)"""
+
+    # page protection
+    if 'username' in session:
+        username = session['username']
+        return redirect(f'/users/{username}')
 
     form = LoginForm()
 
