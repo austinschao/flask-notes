@@ -4,18 +4,18 @@
 
 {% block content %}
 
-<form id="register-form" method="POST">
+<form id="register-form" action="/register" method="POST">
   {{ form.hidden_tag() }}
 
   {% for field in form
   if field.widget.input_type != 'hidden' %}
 
   <p>
-    {{ field.label }} #label
-    {{ field }} #input
+    {{ field.label }}
+    {{ field }}
 
     {% for error in field.errors %}
-    {{ error }} #display error from invalid inputs
+    {{ error }}
     {% endfor %}
   </p>
   {% endfor %}

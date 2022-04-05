@@ -20,3 +20,13 @@ class RegisterForm(FlaskForm):
     first_name = StringField('First Name', validators=[DataRequired(), Length(max=30)])
 
     last_name = StringField('Last Name', validators=[DataRequired(), Length(max=30)])
+
+class LoginForm(FlaskForm):
+    """ Create a form for logging in existing users """
+
+    username = StringField('Username', validators=[DataRequired(), Length(max=20)])
+
+    password = PasswordField('Password', validators=[DataRequired(), Length(min=5, max=20)])
+
+class CSRFProtection(FlaskForm):
+    """ Form for CSRF Protection"""
