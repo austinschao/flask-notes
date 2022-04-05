@@ -2,7 +2,7 @@ from wsgiref import validate
 
 from flask_wtf import FlaskForm
 
-from wtforms import StringField, EmailField, PasswordField
+from wtforms import StringField, EmailField, PasswordField, TextAreaField
 
 from wtforms.validators import InputRequired, Email, Length, DataRequired, email_validator
 
@@ -21,6 +21,7 @@ class RegisterForm(FlaskForm):
 
     last_name = StringField('Last Name', validators=[DataRequired(), Length(max=30)])
 
+
 class LoginForm(FlaskForm):
     """ Create a form for logging in existing users """
 
@@ -28,5 +29,23 @@ class LoginForm(FlaskForm):
 
     password = PasswordField('Password', validators=[DataRequired(), Length(min=5, max=20)])
 
+
 class CSRFProtection(FlaskForm):
     """ Form for CSRF Protection"""
+
+
+class AddNote(FlaskForm):
+    """ Form for adding a note """
+
+    title = StringField('Title', validators=[DataRequired(), Length(max=100)])
+
+    content = TextAreaField('Content', validators=[DataRequired()])
+
+
+class EditNote(FlaskForm):
+    """ Form for editing a note """
+
+    title = StringField('Title', validators=[DataRequired(), Length(max=100)])
+
+    content = TextAreaField('Content', validators=[DataRequired()])
+

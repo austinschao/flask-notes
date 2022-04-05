@@ -8,6 +8,8 @@ bcrypt = Bcrypt()
 class User(db.Model):
     """ Creating a User """
 
+    notes = db.relationship('Note', backref = "user")
+
     __tablename__ = 'users'
 
     username = db.Column(db.String(20), primary_key=True)
@@ -42,6 +44,19 @@ class User(db.Model):
         else:
             return False
 
+
+class Note(db.Model):
+    """ Create a Note """
+
+    __tablename__ = 'notes'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+
+    title = db.Column(db.String(100), nullable=False)
+
+    content = db.Column(db.Text, nullable=False)
+
+    owner = db.Column(db.Text, db.ForeignKey('users.username'), nullable=False)
 
 
 

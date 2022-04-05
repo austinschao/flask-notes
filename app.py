@@ -1,8 +1,8 @@
 from flask import Flask, render_template, request, redirect, session, flash
 
-from models import User, db, connect_db
+from models import User, db, connect_db, Note
 
-from forms import RegisterForm, LoginForm, CSRFProtection
+from forms import RegisterForm, LoginForm, CSRFProtection, AddNote, EditNote
 
 app = Flask(__name__)
 
@@ -43,8 +43,8 @@ def register():
 
         db.session.add(new_user)
         db.session.commit()
-        
-        session["username"] = user.username
+
+        session["username"] = username
         return redirect(f'/users/{username}')
 
     else:
@@ -72,7 +72,7 @@ def login():
             return redirect(f'/users/{username}')
         else:
             form.username.errors = ['Bad username/password']
-    
+
     return render_template('login.html', form=form)
 
 
@@ -82,12 +82,12 @@ def show_user_page(username):
 
     form = CSRFProtection()
 
+
     if "username" not in session:
         flash("must be logged in to access user info")
         return redirect('/login')
     else:
         curr_user = User.query.get(username)
-
         return render_template('user_page.html', user=curr_user, form=form)
 
 
@@ -101,3 +101,64 @@ def logout():
         session.pop('username', None)
 
     return redirect('/')
+
+
+@app.post('/users/<username>/delete')
+def delete_user(username):
+    """ Delete user's account """
+
+    form = CSRFProtection()
+
+    # if session["username"] == username:
+    #     user = User.query.get_or_404(username)
+    #     session.pop('username', None)
+
+    #     for note in user.notes:
+    #         db.session.delete(note)
+
+    #     db.session.delete(user)
+    #     db.session.commit()
+
+    #     flash("User was successfully deleted!")
+    #     return redirect('/')
+
+    if form.validate_on_submit():
+        if session["username"] == username:
+            user = User.query.get_or_404(username)
+            session.pop('username', None)
+
+            for note in user.notes:
+                db.session.delete(note)
+
+            db.session.delete(user)
+            db.session.commit()
+
+            flash("User was successfully deleted!")
+
+    return redirect('/')
+
+
+
+
+
+@app.route('/users/<username>/notes/add', methods=['GET', 'POST'])
+def add_note(username):
+    """ Add a note to the user's profile """
+
+    form = AddNote()
+
+    user = User.query.get_or_404(username)
+
+    if form.validate_on_submit():
+        title = form.title.data
+        content = form.content.data
+
+        new_note = Note(title=title, content=content, owner=username)
+
+        db.session.add(new_note)
+        db.session.commit()
+
+        return redirect(f'/users/{username}')
+
+    else:
+        return render_template('add_note.html', form=form, user=user)
