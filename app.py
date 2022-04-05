@@ -120,7 +120,8 @@ def delete_user(username):
     #     db.session.commit()
 
     #     flash("User was successfully deleted!")
-    #     return redirect('/')
+    #     return redirect('/')   
+    
 
     if form.validate_on_submit():
         if session["username"] == username:
@@ -139,7 +140,7 @@ def delete_user(username):
 
 
 
-
+# ROUTES FOR NOTES
 
 @app.route('/users/<username>/notes/add', methods=['GET', 'POST'])
 def add_note(username):
@@ -167,6 +168,10 @@ def add_note(username):
 @app.route("/notes/<int:note_id>/update", methods=["GET", "POST"])
 def update_note(note_id):
     """Display update form to update note, redirects to user page"""
+
+    if "username" not in session:
+        flash("must be logged in to access note info")
+        return redirect('/login')
 
     note = Note.query.get_or_404(note_id)
     form = UpdateNote(obj=note)
