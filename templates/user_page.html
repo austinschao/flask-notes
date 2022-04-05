@@ -16,19 +16,19 @@
         </li>
         {% endfor %}
     </ul>
-    <a href="/users/{{user.username}}/notes/add">Add Note</a>
+    <a href="/users/{{user.username}}/notes/add" class="btn btn-success">Add Note</a>
 </div>
 
 
 <form action="/logout" method="POST">
     {{form.hidden_tag()}}
-    <button type="submit" class="btn btn-primary">Logout</button>
+    <button type="submit" class="btn btn-outline-secondary">Logout</button>
 </form>
 
 
 <form action="/users/{{user.username}}/delete" method="POST">
     {{form.hidden_tag()}}
-    <button type="submit" class="btn btn-primary">Delete User</button>
+    <button type="submit" class="btn btn-danger">Delete User</button>
 </form>
 
 {% endblock %}

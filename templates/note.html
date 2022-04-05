@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<form id="edit-note-form" action="/users/{{user.username}}/notes/update" method="PATCH">
+<form id="update-note-form" action="/notes/{{note.id}}/update" method="POST">
   {{ form.hidden_tag() }}
 
   {% for field in form
@@ -19,12 +19,13 @@
     {% endfor %}
   </p>
   {% endfor %}
-  <button type="submit">Edit Note</button>
+  <button type="submit" class="btn btn-success">Update Note</button>
+  <a href="/users/{{note.owner}}" class="btn btn-outline-primary">Cancel</a>
 </form>
 
-<form action="/notes/{{note.id}}/delete" method="DELETE">
+<form action="/notes/{{note.id}}/delete" method="POST">
   {{form.hidden_tag()}}
-  <button type="submit" class="btn btn-primary">Delete Note</button>
+  <button type="submit" class="btn btn-danger">Delete Note</button>
 </form>
 
 

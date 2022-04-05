@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, session, flash
 
 from models import User, db, connect_db, Note
 
-from forms import RegisterForm, LoginForm, CSRFProtection, AddNote, EditNote
+from forms import RegisterForm, LoginForm, CSRFProtection, AddNote, UpdateNote
 
 app = Flask(__name__)
 
@@ -162,3 +162,42 @@ def add_note(username):
 
     else:
         return render_template('add_note.html', form=form, user=user)
+
+
+@app.route("/notes/<int:note_id>/update", methods=["GET", "POST"])
+def update_note(note_id):
+    """Display update form to update note, redirects to user page"""
+
+    note = Note.query.get_or_404(note_id)
+    form = UpdateNote(obj=note)
+
+    if form.validate_on_submit():
+        title = form.title.data
+        content = form.content.data
+
+        note.title = title
+        note.content = content
+
+        db.session.commit()
+
+        return redirect(f'/users/{note.owner}')
+    else:
+        return render_template('note.html', form=form, note=note)
+
+
+@app.post("/notes/<int:note_id>/delete")
+def delete_note(note_id):
+    """ Delete note """
+
+    note = Note.query.get_or_404(note_id)
+    form = CSRFProtection()
+
+    if form.validate_on_submit():
+        if session["username"] == note.owner:
+
+            db.session.delete(note)
+            db.session.commit()
+
+            flash("Note was successfully deleted!")
+
+    return redirect(f'/users/{note.owner}')

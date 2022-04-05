@@ -42,7 +42,7 @@ class AddNote(FlaskForm):
     content = TextAreaField('Content', validators=[DataRequired()])
 
 
-class EditNote(FlaskForm):
+class UpdateNote(FlaskForm):
     """ Form for editing a note """
 
     title = StringField('Title', validators=[DataRequired(), Length(max=100)])
