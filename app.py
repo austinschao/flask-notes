@@ -82,7 +82,6 @@ def show_user_page(username):
 
     form = CSRFProtection()
 
-
     if "username" not in session:
         flash("must be logged in to access user info")
         return redirect('/login')
@@ -107,27 +106,14 @@ def logout():
 def delete_user(username):
     """ Delete user's account """
 
-    form = CSRFProtection()
-
-    # if session["username"] == username:
-    #     user = User.query.get_or_404(username)
-    #     session.pop('username', None)
-
-    #     for note in user.notes:
-    #         db.session.delete(note)
-
-    #     db.session.delete(user)
-    #     db.session.commit()
-
-    #     flash("User was successfully deleted!")
-    #     return redirect('/')   
-    
+    form = CSRFProtection()    
 
     if form.validate_on_submit():
         if session["username"] == username:
             user = User.query.get_or_404(username)
             session.pop('username', None)
 
+            # notes = Note.query.filter_by('owner'=username)
             for note in user.notes:
                 db.session.delete(note)
 
